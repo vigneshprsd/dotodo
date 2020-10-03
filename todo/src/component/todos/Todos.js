@@ -3,13 +3,14 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { getTodos, deleteTodos } from "../../actions/todo";
 import TodoForm from "./TodoForm";
+import Moment from 'react-moment'
 
 const Todos = ({ getTodos, deleteTodos, todo: { todos, loading } }) => {
   const [openTodo, setOpenTodo] = useState(false);
 
   const openModal = () => {
-    setOpenTodo(!openTodo)
-  }
+    setOpenTodo(!openTodo);
+  };
 
   useEffect(() => {
     getTodos();
@@ -17,7 +18,9 @@ const Todos = ({ getTodos, deleteTodos, todo: { todos, loading } }) => {
 
   return (
     <div>
-      <button onClick={()=>openModal()} className='btn btn-success'>ADD NEW TODO</button>
+      <button onClick={() => openModal()} className="btn btn-success">
+        ADD NEW TODO
+      </button>
       <TodoForm isModalOpen={openTodo} openModal={openModal} />
       {todos.map((m) => (
         <table
@@ -43,6 +46,11 @@ const Todos = ({ getTodos, deleteTodos, todo: { todos, loading } }) => {
               <td colSpan={2}>{m.text}</td>
             </tr>
           </tbody>
+          <tfoot>
+            <tr>
+              <td  colSpan={2}>Date : <Moment format='DD/MM/YYYY'>{m.date}</Moment> </td>
+            </tr>
+          </tfoot>
         </table>
       ))}
     </div>
