@@ -6,12 +6,12 @@ export const Landing = () => {
     <section class="landing">
       <div class="dark-overlay">
         <div class="landing-inner">
-          <h1 class="x-large">TODOOOO</h1>
+          <h1 class="x-large">TRUDU</h1>
           <p class="lead">
-            Create your TODO list and Access it everwhere
+            Create your TODO list and Access it anywhere
           </p>
           <div class="buttons">
-            <Link to="/register" className="btn btn-primLinkry">
+            <Link to="/register" className="btn btn-primary">
               Sign Up
             </Link>
             <Link to="/login" className="btn btn-light">

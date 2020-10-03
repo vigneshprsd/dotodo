@@ -32,7 +32,7 @@ const guestLink = (
     <nav className="navbar bg-dark">
       <h1>
         <Link to='/'>
-          <i className="fas fa-tasks"></i> TODOOOO
+          <i className="fas fa-tasks"></i> TRUDU
         </Link>
       </h1>
       {!loading && (<Fragment>
