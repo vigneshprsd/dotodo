@@ -2,6 +2,10 @@ import axios from "axios";
 import { setAlert } from "./alert";
 import { DELETE_TODO, GET_TODOS, TODO_ERROR, ADD_TODO } from "./types";
 
+
+const sleep =(ms) => (response) =>
+    new Promise(resolve => setTimeout(()=>resolve(response),ms));
+
 // add todos
 export const addTodos = (formData) => async (dispatch) => {
   const config = {
@@ -15,6 +19,7 @@ export const addTodos = (formData) => async (dispatch) => {
 
   try {
     const res = await axios.post("/api/todo", formData, config);
+    await sleep(3000);
     dispatch({
       type: ADD_TODO,
       payload: res.data,

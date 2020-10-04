@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { getTodos, deleteTodos } from "../../actions/todo";
 import TodoForm from "./TodoForm";
 import Moment from 'react-moment'
+import { Loading } from "../Loader/Loading";
 
 const Todos = ({ getTodos, deleteTodos, todo: { todos, loading } }) => {
   const [openTodo, setOpenTodo] = useState(false);
@@ -16,9 +17,9 @@ const Todos = ({ getTodos, deleteTodos, todo: { todos, loading } }) => {
     getTodos();
   }, [getTodos]);
 
-  return (
+  return loading? <Loading/> : (
     <div>
-      <button onClick={() => openModal()} className="btn btn-success">
+      <button onClick={() => openModal()} className="text-orange-500 bg-transparent border border-solid border-orange-500 hover:bg-orange-500 hover:text-black active:bg-orange-600 font-regular uppercase text-sm px-4 py-4 rounded outline-none focus:outline-none ml-1 mb-1">
         ADD NEW TODO
       </button>
       <TodoForm isModalOpen={openTodo} openModal={openModal} />
