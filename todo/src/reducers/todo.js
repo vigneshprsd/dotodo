@@ -1,4 +1,10 @@
-import { GET_TODOS, TODO_ERROR, DELETE_TODO, ADD_TODO } from "../actions/types";
+import {
+  GET_TODOS,
+  TODO_ERROR,
+  DELETE_TODO,
+  ADD_TODO,
+  UPDATE_TODO,
+} from "../actions/types";
 
 const initialState = {
   todos: [],
@@ -10,11 +16,12 @@ export default function (state = initialState, action) {
   const { type, payload } = action;
   switch (type) {
     case ADD_TODO:
-    return{
+    case UPDATE_TODO:
+      return {
         ...state,
-        todos:[...state.todos,payload],
-        loading:false
-    }
+        todos: [...state.todos, payload],
+        loading: false,
+      };
     case GET_TODOS:
       return {
         ...state,

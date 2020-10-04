@@ -1,12 +1,12 @@
 import React, { Fragment, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { getTodos, deleteTodos } from "../../actions/todo";
+import { getTodos, deleteTodos, editTodo } from "../../actions/todo";
 import TodoForm from "./TodoForm";
-import Moment from 'react-moment'
+import Moment from "react-moment";
 import { Loading } from "../Loader/Loading";
 
-const Todos = ({ getTodos, deleteTodos, todo: { todos, loading } }) => {
+const Todos = ({ getTodos, deleteTodos,editTodo, todo: { todos, loading } }) => {
   const [openTodo, setOpenTodo] = useState(false);
 
   const openModal = () => {
@@ -17,42 +17,42 @@ const Todos = ({ getTodos, deleteTodos, todo: { todos, loading } }) => {
     getTodos();
   }, [getTodos]);
 
-  return loading? <Loading/> : (
+  return loading ? (
+    <Loading />
+  ) : (
     <div>
-      <button onClick={() => openModal()} className="text-orange-500 bg-transparent border border-solid border-orange-500 hover:bg-orange-500 hover:text-black active:bg-orange-600 font-regular uppercase text-sm px-4 py-4 rounded outline-none focus:outline-none ml-1 mb-1">
+      <button
+        onClick={() => openModal()}
+        className="text-orange-500 bg-transparent border border-solid border-orange-500 hover:bg-orange-500 hover:text-black active:bg-orange-600 font-regular uppercase text-sm px-4 py-4 rounded outline-none focus:outline-none ml-1 mb-1"
+      >
         ADD NEW TODO
       </button>
       <TodoForm isModalOpen={openTodo} openModal={openModal} />
       {todos.map((m) => (
-        <table
-          className="todolist"
-          style={{ width: "100%", textAlign: "left" }}
-          key={m._id}
-        >
-          <thead>
-            <tr>
-              <th>{m.title}</th>
-              <td style={{ textAlign: "right" }}>
-                <button
-                  onClick={(e) => deleteTodos(m._id)}
-                  style={{ border: "none", backgroundColor: "transparent" }}
-                >
-                  <i className="fas fa-times-circle"></i>
-                </button>
-              </td>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td colSpan={2}>{m.text}</td>
-            </tr>
-          </tbody>
-          <tfoot>
-            <tr>
-              <td  colSpan={2}>Date : <Moment format='DD/MM/YYYY'>{m.date}</Moment> </td>
-            </tr>
-          </tfoot>
-        </table>
+        <div key={m.id} className="todolist">
+          <h5 className="text-orange-500 uppercase">
+            {m.title}{" "}
+            <span className="float-right">
+              <Moment format="DD/MM/YYYY">{m.date}</Moment>
+            </span>
+          </h5>
+          <p className="break-words py-1">{m.text}</p>
+          <div className="text-orange-500" style={{ width: "100px" }}>
+            <button
+              className="mr-3"
+              onClick={(e) => editTodo(m.title,m.text,m._id)}
+              style={{ border: "none", backgroundColor: "transparent" }}
+            >
+              <i className="fa fa-edit" aria-hidden="true"></i>
+            </button>
+            <button
+              onClick={(e) => deleteTodos(m._id)}
+              style={{ border: "none", backgroundColor: "transparent" }}
+            >
+              <i className="fa fa-trash-alt" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
       ))}
     </div>
   );
@@ -61,6 +61,7 @@ const Todos = ({ getTodos, deleteTodos, todo: { todos, loading } }) => {
 Todos.propTypes = {
   getTodos: PropTypes.func.isRequired,
   deleteTodos: PropTypes.func.isRequired,
+  editTodo: PropTypes.func.isRequired,
   todo: PropTypes.object.isRequired,
 };
 
@@ -68,4 +69,6 @@ const mapStateToProps = (state) => ({
   todo: state.todo,
 });
 
-export default connect(mapStateToProps, { getTodos, deleteTodos })(Todos);
+export default connect(mapStateToProps, { getTodos, deleteTodos, editTodo })(
+  Todos
+);

@@ -40,6 +40,68 @@ router.post(
   }
 );
 
+
+// @route PUT api/todos/:id
+// @desc update todo
+// @access Private
+router.put('/:id',[auth,[
+  check('title','title is required').not().isEmpty(),
+  check('text','text is required').not().isEmpty()
+]],
+async(req,res)=>{
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+        return res.status(400).json({errors:errors.array()});
+    }
+    const {
+        title,
+        text
+    } = req.body;
+
+    const newTodo = {
+        title,
+        text
+    }
+    try {
+        const todo = await Todo.findOne(req.params.id);
+
+        todo.unshift(newTodo);
+
+        await todo.save();
+
+        res.json(todo);
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send('Server Error');
+    }
+});
+
+
+// @route GET api/todos/:id
+// @desc Get todo by id
+// @access Private
+router.get("/:id", auth, async (req, res) => {
+  try {
+    const todo = await Todo.findById(req.params.id);
+    
+    if(!todo){
+        return res.status(404).json({msg:'Post not found'});
+    }
+
+    res.json(todo);
+  } catch (error) {
+    console.error(error.message);
+    if(error.kind === 'ObjectId'){
+      return res.status(404).json({msg:'Post not found'});
+  }
+    res.status(500).send("server error");
+  }
+});
+
+
+
+
+
 // @route GET api/todo
 // @desc Get all todos
 // @access Private

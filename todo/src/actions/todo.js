@@ -1,6 +1,6 @@
 import axios from "axios";
 import { setAlert } from "./alert";
-import { DELETE_TODO, GET_TODOS, TODO_ERROR, ADD_TODO } from "./types";
+import { DELETE_TODO, GET_TODOS, TODO_ERROR, ADD_TODO, UPDATE_TODO } from "./types";
 
 
 const sleep =(ms) => (response) =>
@@ -13,8 +13,6 @@ export const addTodos = (formData) => async (dispatch) => {
       "Content-Type": "application/json",
     },
   };
-
-
 
 
   try {
@@ -59,13 +57,48 @@ export const getTodos = () => async (dispatch) => {
 export const deleteTodos = (id) => async (dispatch) => {
   try {
     const res = await axios.delete(`/api/todo/${id}`);
-    console.log(res);
     dispatch({
       type: DELETE_TODO,
       payload: id,
     });
     dispatch(setAlert("Todo Deleted", "success"));
   } catch (error) {
+    dispatch({
+      type: TODO_ERROR,
+      payload: {
+        msg: error.response.statusText,
+        status: error.response.status,
+      },
+    });
+  }
+};
+
+
+
+//update todo
+export const editTodo = (title,text,id) => async (dispatch) => {
+
+  try {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    const formData = JSON.stringify({ title, text });
+    const res = await axios.put(`/api/todos/${id}`, formData, config);
+    console.log(res);
+
+    dispatch({
+      type: UPDATE_TODO,
+      payload: res.data,
+    });
+    dispatch(setAlert("Todo Updated", "success"));
+  } catch (error) {
+    const errors = error.response.data.errors;
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, "danger")));
+    }
     dispatch({
       type: TODO_ERROR,
       payload: {
