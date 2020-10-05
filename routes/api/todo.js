@@ -41,7 +41,7 @@ router.post(
 );
 
 
-// @route PUT api/todos/:id
+// @route PUT api/todo/:id
 // @desc update todo
 // @access Private
 router.put('/:id',[auth,[
@@ -63,11 +63,14 @@ async(req,res)=>{
         text
     }
     try {
-        const todo = await Todo.findOne(req.params.id);
+        const todo = await Todo.findById(req.params.id);
 
-        todo.unshift(newTodo);
+      // todo.unshift(newTodo);
+      todo.title= title;
+      todo.text=text;
+      todo.date=Date.now();
 
-        await todo.save();
+       await todo.save();
 
         res.json(todo);
     } catch (error) {
@@ -85,14 +88,14 @@ router.get("/:id", auth, async (req, res) => {
     const todo = await Todo.findById(req.params.id);
     
     if(!todo){
-        return res.status(404).json({msg:'Post not found'});
+        return res.status(404).json({msg:'Todo not found'});
     }
 
     res.json(todo);
   } catch (error) {
     console.error(error.message);
     if(error.kind === 'ObjectId'){
-      return res.status(404).json({msg:'Post not found'});
+      return res.status(404).json({msg:'Todo not found'});
   }
     res.status(500).send("server error");
   }

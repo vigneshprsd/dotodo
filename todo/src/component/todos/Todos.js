@@ -1,17 +1,27 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, {useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { getTodos, deleteTodos, editTodo } from "../../actions/todo";
+import { getTodos, deleteTodos } from "../../actions/todo";
 import TodoForm from "./TodoForm";
 import Moment from "react-moment";
 import { Loading } from "../Loader/Loading";
 
-const Todos = ({ getTodos, deleteTodos,editTodo, todo: { todos, loading } }) => {
+const Todos = ({ getTodos, deleteTodos, todo: { todos, loading } }) => {
   const [openTodo, setOpenTodo] = useState(false);
+  const [editFormData, setEditFormData] = useState();
 
   const openModal = () => {
     setOpenTodo(!openTodo);
   };
+
+  const clearEditFormData = () => {
+    setEditFormData()
+  };
+
+  const handleEdit = (id,title,text) => {
+    setOpenTodo(true);
+    setEditFormData({id,title,text});
+  }
 
   useEffect(() => {
     getTodos();
@@ -27,9 +37,9 @@ const Todos = ({ getTodos, deleteTodos,editTodo, todo: { todos, loading } }) => 
       >
         ADD NEW TODO
       </button>
-      <TodoForm isModalOpen={openTodo} openModal={openModal} />
+      <TodoForm isModalOpen={openTodo} clearEditFormData={clearEditFormData} editFormData={editFormData} openModal={openModal} />
       {todos.map((m) => (
-        <div key={m.id} className="todolist">
+        <div key={m._id} className="todolist">
           <h5 className="text-orange-500 uppercase">
             {m.title}{" "}
             <span className="float-right">
@@ -40,7 +50,7 @@ const Todos = ({ getTodos, deleteTodos,editTodo, todo: { todos, loading } }) => 
           <div className="text-orange-500" style={{ width: "100px" }}>
             <button
               className="mr-3"
-              onClick={(e) => editTodo(m.title,m.text,m._id)}
+              onClick={() => handleEdit(m._id,m.title,m.text)}
               style={{ border: "none", backgroundColor: "transparent" }}
             >
               <i className="fa fa-edit" aria-hidden="true"></i>
@@ -61,7 +71,6 @@ const Todos = ({ getTodos, deleteTodos,editTodo, todo: { todos, loading } }) => 
 Todos.propTypes = {
   getTodos: PropTypes.func.isRequired,
   deleteTodos: PropTypes.func.isRequired,
-  editTodo: PropTypes.func.isRequired,
   todo: PropTypes.object.isRequired,
 };
 
@@ -69,6 +78,6 @@ const mapStateToProps = (state) => ({
   todo: state.todo,
 });
 
-export default connect(mapStateToProps, { getTodos, deleteTodos, editTodo })(
+export default connect(mapStateToProps, { getTodos, deleteTodos })(
   Todos
 );

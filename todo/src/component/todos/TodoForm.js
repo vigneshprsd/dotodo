@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { addTodos } from "../../actions/todo";
+import { addTodos,editTodo } from "../../actions/todo";
 import Modal from "react-modal";
+import { useEffect } from "react";
 
 const customStyles = {
   content: {
@@ -15,18 +16,38 @@ const customStyles = {
     transform: "translate(-50%, -50%)",
   },
 };
-const TodoForm = ({ addTodos, isModalOpen, openModal }) => {
+
+
+const TodoForm = ({ addTodos,editTodo, isModalOpen, openModal, editFormData , clearEditFormData }) => {
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
+  let titleText = "Add new todo"
+  if(editFormData !== undefined)
+  {
+    titleText = "Update todo"
+  }
+
+
+useEffect(()=>{
+  Modal.setAppElement('body');
+},[]);
+
   return (
-    <Modal isOpen={isModalOpen} onRequestClose={openModal} style={customStyles}>
+    <Modal isOpen={isModalOpen} onRequestClose={()=>{openModal(); clearEditFormData()}} style={customStyles}>
       <div className="post-form">
-        <h4 className="text-orange-500">ADD NEW TODO</h4>
+  <h4 className="text-orange-500">{titleText}</h4>
         <form
           className="form my-1 bg-transparent"
           onSubmit={(e) => {
             e.preventDefault();
-            addTodos({ title, text });
+            if(editFormData !== undefined){
+              console.log('working');
+              let id = editFormData.id;
+              editTodo({id, title, text });
+              clearEditFormData();
+            }else{
+              addTodos({ title, text });
+            }
             openModal();
             setText("");
             setTitle("");
@@ -55,7 +76,7 @@ const TodoForm = ({ addTodos, isModalOpen, openModal }) => {
           <input
             type="submit"
             className="text-orange-500 bg-transparent border border-solid border-orange-500 hover:bg-orange-500 hover:text-black active:bg-orange-600 font-regular uppercase text-sm px-4 py-4 rounded outline-none focus:outline-none ml-1 mb-1 mt-3"
-            value="ADD NEW TODO"
+            value={titleText}
           />
         </form>
       </div>
@@ -65,6 +86,7 @@ const TodoForm = ({ addTodos, isModalOpen, openModal }) => {
 
 TodoForm.propTypes = {
   addTodos: PropTypes.func.isRequired,
+  editTodo:PropTypes.func.isRequired,
 };
 
-export default connect(null, { addTodos })(TodoForm);
+export default connect(null, { addTodos,editTodo })(TodoForm);

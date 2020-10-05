@@ -56,7 +56,7 @@ export const getTodos = () => async (dispatch) => {
 //delete todos
 export const deleteTodos = (id) => async (dispatch) => {
   try {
-    const res = await axios.delete(`/api/todo/${id}`);
+    await axios.delete(`/api/todo/${id}`);
     dispatch({
       type: DELETE_TODO,
       payload: id,
@@ -76,7 +76,7 @@ export const deleteTodos = (id) => async (dispatch) => {
 
 
 //update todo
-export const editTodo = (title,text,id) => async (dispatch) => {
+export const editTodo = (formData) => async (dispatch) => {
 
   try {
     const config = {
@@ -84,11 +84,10 @@ export const editTodo = (title,text,id) => async (dispatch) => {
         "Content-Type": "application/json",
       },
     };
-
-    const formData = JSON.stringify({ title, text });
-    const res = await axios.put(`/api/todos/${id}`, formData, config);
+    
+   // const formData = JSON.stringify({ title, text });
+    const res = await axios.put(`/api/todo/${formData.id}`, formData, config);
     console.log(res);
-
     dispatch({
       type: UPDATE_TODO,
       payload: res.data,

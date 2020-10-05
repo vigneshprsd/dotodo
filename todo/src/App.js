@@ -13,7 +13,6 @@ import { loadUser } from "./actions/auth";
 import setAuthToken from "./utils/setAuthToken";
 import Dashboard from "./component/dashboard/Dashboard";
 import PrivateRoute from "./component/routing/PrivateRoute";
-import Todos from "./component/todos/Todos";
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
