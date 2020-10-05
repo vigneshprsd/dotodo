@@ -1,4 +1,4 @@
-import React, {useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { getTodos, deleteTodos } from "../../actions/todo";
@@ -15,13 +15,13 @@ const Todos = ({ getTodos, deleteTodos, todo: { todos, loading } }) => {
   };
 
   const clearEditFormData = () => {
-    setEditFormData()
+    setEditFormData();
   };
 
-  const handleEdit = (id,title,text) => {
+  const handleEdit = (id, title, text) => {
     setOpenTodo(true);
-    setEditFormData({id,title,text});
-  }
+    setEditFormData({ id, title, text });
+  };
 
   useEffect(() => {
     getTodos();
@@ -37,33 +37,40 @@ const Todos = ({ getTodos, deleteTodos, todo: { todos, loading } }) => {
       >
         ADD NEW TODO
       </button>
-      <TodoForm isModalOpen={openTodo} clearEditFormData={clearEditFormData} editFormData={editFormData} openModal={openModal} />
-      {todos.map((m) => (
-        <div key={m._id} className="todolist">
-          <h5 className="text-orange-500 uppercase">
-            {m.title}{" "}
-            <span className="float-right">
-              <Moment format="DD/MM/YYYY">{m.date}</Moment>
-            </span>
-          </h5>
-          <p className="break-words py-1">{m.text}</p>
-          <div className="text-orange-500" style={{ width: "100px" }}>
-            <button
-              className="mr-3"
-              onClick={() => handleEdit(m._id,m.title,m.text)}
-              style={{ border: "none", backgroundColor: "transparent" }}
-            >
-              <i className="fa fa-edit" aria-hidden="true"></i>
-            </button>
-            <button
-              onClick={(e) => deleteTodos(m._id)}
-              style={{ border: "none", backgroundColor: "transparent" }}
-            >
-              <i className="fa fa-trash-alt" aria-hidden="true"></i>
-            </button>
+      <TodoForm
+        isModalOpen={openTodo}
+        clearEditFormData={clearEditFormData}
+        editFormData={editFormData}
+        openModal={openModal}
+      />
+      <div className="todomaincontainer mt-2">
+        {todos.map((m) => (
+          <div key={m._id} className="todolist">
+            <h5 className="text-orange-500 uppercase">
+              {m.title}{" "}
+              <span className="float-right">
+                <Moment format="DD/MM/YYYY">{m.date}</Moment>
+              </span>
+            </h5>
+            <p className="break-words py-1">{m.text}</p>
+            <div className="text-orange-500" style={{ width: "100px" }}>
+              <button
+                className="mr-3"
+                onClick={() => handleEdit(m._id, m.title, m.text)}
+                style={{ border: "none", backgroundColor: "transparent" }}
+              >
+                <i className="fa fa-edit" aria-hidden="true"></i>
+              </button>
+              <button
+                onClick={(e) => deleteTodos(m._id)}
+                style={{ border: "none", backgroundColor: "transparent" }}
+              >
+                <i className="fa fa-trash-alt" aria-hidden="true"></i>
+              </button>
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };
@@ -78,6 +85,4 @@ const mapStateToProps = (state) => ({
   todo: state.todo,
 });
 
-export default connect(mapStateToProps, { getTodos, deleteTodos })(
-  Todos
-);
+export default connect(mapStateToProps, { getTodos, deleteTodos })(Todos);
